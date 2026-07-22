@@ -1,1 +1,57 @@
+// GRML · IX Fullscan
+const GRML_IX = {
+    MODE: "active",
+    STATE: "rdy",
+    LEVEL: "rot",
+
+    async check(file){
+        try {
+            const res = await fetch(`./${file}`);
+            if(!res.ok){
+                return { FILE:file, STATE:"miss", LEVEL:"rot" };
+            }
+
+            const text = await res.text();
+            if(text.trim().length === 0){
+                return { FILE:file, STATE:"empty", LEVEL:"gelb" };
+            }
+
+            return { FILE:file, STATE:"ok", LEVEL:"gruen" };
+        } catch(e){
+            return { FILE:file, STATE:"miss", LEVEL:"rot" };
+        }
+    },
+
+    async scan(){
+        const files = [
+            "HOST.html",
+            "ID.html",
+            "KERNEL.me",
+            "MATRIX.me",
+            "VECTOR.me",
+            "NC.math",
+            "IX-NC3×3.room",
+            "IX-NC6eU6D.room",
+            "IX-NC9×9.room",
+            "X.room.CORE",
+            "X.room.IN",
+            "X.room.OUT",
+            "verify.html",
+            "index.html"
+        ];
+
+        const out = { rot:[], gelb:[], gruen:[] };
+
+        for(const f of files){
+            const r = await this.check(f);
+            if(r.LEVEL === "rot") out.rot.push(r.FILE);
+            else if(r.LEVEL === "gelb") out.gelb.push(r.FILE);
+            else out.gruen.push(r.FILE);
+        }
+
+        return out;
+    }
+};
+
+console.log("GRML_IX Fullscan aktiv");
 
