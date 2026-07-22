@@ -17,20 +17,21 @@ a { color:#6cf; display:block; margin:10px 0; }
 
 <h1>IX · Station</h1>
 
-<pre>
-CORE    = IX
-VERSION = 2.0
-STATE   = rdy
-LEVEL   = rot
-READY   = 100%
+<pre id="grml_out">
+CORE        = IX
+VERSION     = 2.1
+STATE       = rdy
+LEVEL       = rot
+READY       = 100%
 
-MODULES = NC / KERNEL / MATRIX / VECTOR / ROOM
+GRML.MODE   = aktiv
+GRML.SCAN   = läuft...
 </pre>
 
 <h2>Module</h2>
 <div class="grid">
   <a href="./ID.html">IX · Identität</a>
-  <a href="./ghost.html">IX · Ghost</a>
+  <a href="./host.html">IX · Host</a>
   <a href="./KERNEL.me">Kernel</a>
   <a href="./MATRIX.me">Matrix</a>
   <a href="./VECTOR.me">Vector</a>
@@ -42,6 +43,18 @@ MODULES = NC / KERNEL / MATRIX / VECTOR / ROOM
   <a href="./X.room.IN">X · IN</a>
   <a href="./X.room.OUT">X · OUT</a>
 </div>
+
+<script src="./grml.ix.mode"></script>
+
+<script>
+(async () => {
+    const out = document.getElementById("grml_out");
+    const scan = await GRML_IX.scan();
+
+    out.innerHTML += "\nGRML.OK      = " + JSON.stringify(scan.ok);
+    out.innerHTML += "\nGRML.MISS    = " + JSON.stringify(scan.miss);
+})();
+</script>
 
 </body>
 </html>
