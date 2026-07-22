@@ -2,24 +2,21 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>UP · verify</title>
-
-<!-- Prefetch -->
-<link rel="prefetch" href="./index.html">
-<link rel="prefetch" href="./time_3x11_scroll_zoom.html">
-<link rel="prefetch" href="./scan.mode">
-<link rel="prefetch" href="./grml.mode">
+<title>IX · verify</title>
 
 <style>
 body { background:#000; color:#0f0; font-family:Consolas; padding:20px; }
 pre  { background:#111; border:1px solid #333; padding:12px; white-space:pre-wrap; }
 h1   { color:#6cf; }
+.rot { color:#ff4444; }
+.gelb { color:#ffcc00; }
+.gruen { color:#00ff88; }
 </style>
 </head>
 
 <body>
 
-<h1>UP · Verifikation</h1>
+<h1>IX · Verifikation (GRML)</h1>
 
 <pre id="verify_out">
 VERIFY      = aktiv
@@ -27,51 +24,19 @@ MODE        = GRML
 STATE       = rdy
 LEVEL       = rot
 
-CACHE.IN    = index.html / time_3x11_scroll_zoom.html
-CACHE.OUT   = t / T
-
-GRML.SCAN   = aktiv
-GRML.CHECK  = läuft...
+SCAN        = läuft...
 </pre>
 
+<script src="./grml.ix.mode"></script>
+
 <script>
-// GRML-Engine
-async function GRML_SCAN(){
-    const files = [
-        "index.html",
-        "time_3x11_scroll_zoom.html",
-        "scan.mode",
-        "grml.mode"
-    ];
-
-    const result = {
-        ok: [],
-        miss: []
-    };
-
-    for(const f of files){
-        try {
-            const res = await fetch(`./${f}`);
-            if(res.ok){
-                result.ok.push(f);
-            } else {
-                result.miss.push(f);
-            }
-        } catch(e){
-            result.miss.push(f);
-        }
-    }
-
-    return result;
-}
-
-// Render
 (async () => {
     const out = document.getElementById("verify_out");
-    const scan = await GRML_SCAN();
+    const scan = await GRML_IX.scan();
 
-    out.innerHTML += "\nGRML.OK      = " + JSON.stringify(scan.ok);
-    out.innerHTML += "\nGRML.MISS    = " + JSON.stringify(scan.miss);
+    out.innerHTML += "\n\nROT (kritisch):\n" + scan.rot.map(f => " - " + f).join("\n");
+    out.innerHTML += "\n\nGELB (warn):\n" + scan.gelb.map(f => " - " + f).join("\n");
+    out.innerHTML += "\n\nGRÜN (ok):\n" + scan.gruen.map(f => " - " + f).join("\n");
 })();
 </script>
 
